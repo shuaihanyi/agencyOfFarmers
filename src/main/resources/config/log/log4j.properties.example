@@ -1,0 +1,38 @@
+# Set root logger level to WARN and append to stdout
+log4j.rootLogger=debug, stdout, alllog, errorlog, fatallog
+
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Encoding = UTF-8
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern = [%-5p][%d{yyyy-MM-dd HH:mm:ss}],  [%t] [Class]%c: %L, %m%n
+
+#\u4FDD\u5B58\u5230\u6587\u4EF6-all \u4FE1\u606F
+log4j.appender.alllog = org.apache.log4j.DailyRollingFileAppender
+log4j.appender.alllog.Threshold = INFO
+log4j.appender.alllog.Append = true
+log4j.appender.alllog.BufferedIO = false
+log4j.appender.alllog.File = D:/Developer/log/web/zxck.log
+log4j.appender.alllog.Encoding = UTF-8
+log4j.appender.alllog.layout = org.apache.log4j.PatternLayout
+log4j.appender.alllog.layout.ConversionPattern = [%-5p][%d{yyyy-MM-dd HH:mm:ss}], [%t]%-c{1}:%L, %m%n
+
+#\u4FDD\u5B58\u5230\u6587\u4EF6-error \u4FE1\u606F
+log4j.appender.errorlog = org.apache.log4j.DailyRollingFileAppender
+log4j.appender.errorlog.Threshold = ERROR
+log4j.appender.errorlog.Append = true
+log4j.appender.errorlog.BufferedIO = false
+log4j.appender.errorlog.File = D:/Developer/log/web/zxck_error.log
+log4j.appender.errorlog.Encoding = UTF-8
+log4j.appender.errorlog.layout = org.apache.log4j.PatternLayout
+log4j.appender.errorlog.layout.ConversionPattern = [%-5p][%d{yyyy-MM-dd HH:mm:ss}], [%t]%-c{1}:%L, %m%n
+
+#\u4FDD\u5B58\u5230\u6587\u4EF6-fatal \u4FE1\u606F
+log4j.appender.fatallog = org.apache.log4j.DailyRollingFileAppender
+log4j.appender.fatallog.Threshold = FATAL
+log4j.appender.fatallog.Append = true
+log4j.appender.fatallog.BufferedIO = false
+log4j.appender.fatallog.File = D:/Developer/log/web/zxck_fatal.log
+log4j.appender.fatallog.Encoding = UTF-8
+log4j.appender.fatallog.layout = org.apache.log4j.PatternLayout
+log4j.appender.fatallog.layout.ConversionPattern = [%-5p][%d{yyyy-MM-dd HH:mm:ss}], [%t]%-c{1}, %m%n
+

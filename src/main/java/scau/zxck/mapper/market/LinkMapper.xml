@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="scau.zxck.dao.market.LinkDao">
+    <cache/>
+
+    <insert id="add" parameterType="SQLAdapter">
+        ${sql}
+    </insert>
+
+    <update id="update" parameterType="SQLAdapter">
+        ${sql}
+    </update>
+
+    <delete id="delete" parameterType="SQLAdapter">
+        ${sql}
+    </delete>
+
+    <!--这里的resultType需要修改为实际的entity-->
+    <select id="find" parameterType="SQLAdapter" resultType="Link" >
+        ${sql}
+    </select>
+
+    <!--这里的resultType需要修改为实际的entity-->
+    <select id="list" parameterType="SQLAdapter" resultType="Link" >
+        ${sql}
+    </select>
+
+    <select id="count" parameterType="SQLAdapter" resultType="long" >
+        ${sql}
+    </select>
+
+    <select id="getMaxPriority" parameterType="Integer" resultType="Integer">
+        select max(priority)
+        from lab_link
+        where parent=#{parent};
+    </select>
+
+    <select id="getCount" parameterType="Integer" resultType="Integer">
+        select count(id)
+        from lab_link
+        where parent = 0;
+    </select>
+
+
+</mapper>

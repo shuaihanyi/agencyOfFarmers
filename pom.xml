@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>scau.fenglong</groupId>
+  <artifactId>fenglong</artifactId>
+  <packaging>war</packaging>
+  <version>1.0</version>
+
+  <name>ssm Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <!-- project start -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.name>ssm-framework</project.build.name>
+    <project.build.jdk>1.8</project.build.jdk>
+    <!-- project end -->
+
+    <ssm-base.version>1.5</ssm-base.version>
+
+    <!-- maven plugins start -->
+    <!-- compiler setting -->
+    <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+    <!-- web container jetty -->
+    <jetty-maven-plugin.version>8.1.16.v20140903</jetty-maven-plugin.version>
+    <project.jetty.run.port>8888</project.jetty.run.port>
+    <!-- maven plugins end -->
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>scau.zxck</groupId>
+      <artifactId>ssm-base</artifactId>
+      <version>${ssm-base.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.build.name}</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${project.build.jdk}</source>
+          <target>${project.build.jdk}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty-maven-plugin.version}</version>
+        <configuration>
+          <stopPort>9999</stopPort>
+          <stopKey>foo</stopKey>
+          <scanIntervalSeconds>3</scanIntervalSeconds>
+          <webApp>
+            <contextPath>/</contextPath>
+            <defaultsDescriptor>src/test/resources/webdefault.xml</defaultsDescriptor>
+          </webApp>
+          <!-- 容器的配置 -->
+          <connectors>
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <port>${project.jetty.run.port}</port>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
+          </connectors>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

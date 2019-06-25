@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 事务管理 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!-- 声明式事务 通过AOP进行拦截 start -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+            <!-- 本系统只支持以下方法前缀命名的方法名 -->
+			<!-- 增加方法 -->
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+
+            <!-- 修改方法 -->
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+
+            <!-- 删除方法 -->
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+
+			<!-- 查询方法 -->
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="list*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="count*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="page*" propagation="SUPPORTS" read-only="true"/>
+
+			<!-- 通配符 -->
+			<tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="txPointcut" expression="execution(* scau.zxck.service..*.*(..))"/><!-- 基于接口的拦截 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+	<!-- 声明式事务 通过AOP进行拦截 end -->
+
+</beans>

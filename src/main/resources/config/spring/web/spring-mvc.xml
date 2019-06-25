@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xmlns:security="http://www.springframework.org/schema/security"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 自动扫描指定目录 在spring.xml中已经配置了扫描所有包，这里就不需要再配置-->
+	<context:component-scan base-package="scau.zxck.web"/>
+
+	<!-- 自定义转换器 -->
+	<bean id="myConversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="scau.zxck.base.web.converter.TimestampConverter"/>
+				<bean class="scau.zxck.base.web.converter.DateConverter"/>
+				<bean class="scau.zxck.base.web.converter.DatetimeConverter"/>
+				<bean class="scau.zxck.base.web.converter.IntegerConverter"/>
+			</set>
+		</property>
+	</bean>
+
+	<!-- 默认注册 DefaultAnnotationHandleMapping以及AnnotionMethodHandleAdapter -->
+	<mvc:annotation-driven conversion-service="myConversionService">
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 全局拦截器 -->
+	<mvc:interceptors>
+		<!--拦截所有请求-->
+		<bean class="scau.zxck.base.web.interceptor.StopWatchHandlerInterceptor"/>
+		<!--拦截指定请求-->
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**"/>
+			<!--  原来：<mvc:mapping path="/admin/**"/>  -->
+			<bean class="scau.zxck.web.interceptor.LogInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+
+	<!-- 静态文件处理过滤 过滤static路径下的静态文件 cache-period指定缓存时间 测试环境设置为0，表示不缓存 -->
+	<!-- 配置 mvc:resources，那么指定的请求交给 SimpleUrlHandlerMapping 进行处理 -->
+	<mvc:resources mapping="/static/**" location="/static/" cache-period="0"/>
+
+
+	<!-- 定义跳转的文件前后缀，视图模式配置 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/pages/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+
+	<!-- 配置文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="UTF-8"/>
+		<!-- 文件大小最小值 -->
+		<property name="maxUploadSize" value="10485760000"/>
+		<!-- 内存中最大值 -->
+		<property name="maxInMemorySize" value="40960"/>
+	</bean>
+
+    <!-- 定义全局的异常处理类 当有异常抛出的时候，此类会自己执行-->
+    <bean id="exceptionHandler" class="scau.zxck.base.web.handler.ExceptionHandler" />
+
+	<!-- 开启 aspetj 注解扫描 如果需要再SpringMVC中使用AOP，需要添加以下配置，如果需要再Service层面使用AOP，需要在spring.xml中也配置-->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+</beans>

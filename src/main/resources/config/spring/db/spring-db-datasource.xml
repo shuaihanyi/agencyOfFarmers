@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 加载指定的配置文件 -->
+	<!--<context:property-placeholder/> 这个tag只能用一次，spring用了单例模式， 需要加载多个文件，需要用通配符-->
+	<context:property-placeholder location="classpath:config/ds/ds-*.properties"/>
+
+	<!-- 配置数据源 -->
+	<!-- dbcp start -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="initialSize" value="${jdbc.initialSize}"/>
+		<property name="maxActive" value="${jdbc.maxActive}"/>
+		<property name="maxIdle" value="${jdbc.maxIdle}"/>
+		<property name="minIdle" value="${jdbc.minIdle}"/>
+		<property name="maxWait" value="${jdbc.maxWait}"/>
+
+		<!-- 事务相关 -->
+		<property name="defaultAutoCommit" value="${jdbc.defaultAutoCommit}"/>
+
+		<!-- 解决mysql 8小时问题 -->
+		<property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+		<property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+		<property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+		<property name="validationQuery" value="${jdbc.validationQuery}"/>
+	</bean>
+	<!-- dbcp end -->
+
+	<!-- c3p0 start
+	<bean id="dataSource_c3p0" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.jdbcUrl}" />
+		<property name="user" value="${c3p0.user}" />
+		<property name="password" value="${c3p0.password}" />
+
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
+	</bean>
+	 c3p0 end -->
+
+	<!-- druid start
+	<bean id="dataSource_druid" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+		  destroy-method="close" >
+		<property name="driverClassName" value="${druid.driverClassName}" />
+		<property name="url" value="${druid.url}" />
+		<property name="username" value="${druid.username}" />
+		<property name="password" value="${druid.password}" />
+
+		<property name="initialSize" value="${druid.initialSize}"/>
+		<property name="maxActive" value="${druid.maxActive}"/>
+		<property name="maxIdle" value="${druid.maxIdle}"/>
+		<property name="minIdle" value="${druid.minIdle}"/>
+		<property name="maxWait" value="${druid.maxWait}"/>
+
+		<property name="defaultAutoCommit" value="${druid.defaultAutoCommit}"/>
+		<property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"/>
+		<property name="maxOpenPreparedStatements" value="${druid.maxOpenPreparedStatements}"/>
+		<property name="validationQuery" value="${druid.validationQuery}"/>
+		<property name="testWhileIdle" value="${druid.testWhileIdle}"/>
+		<property name="testOnBorrow" value="${druid.testOnBorrow}"/>
+		<property name="testOnReturn" value="${druid.testOnReturn}"/>
+		<property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>
+		<property name="filters" value="druid.filters"/>
+	</bean>
+	 druid end -->
+</beans>
